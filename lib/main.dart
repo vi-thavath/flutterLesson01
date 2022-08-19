@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,19 +14,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.amber,
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          // primarySwatch: Colors.amber,
+          // change it to:
+          primarySwatch: Colors.lightGreen,
+          canvasColor: Colors.lightGreen.shade100,
+          platform: TargetPlatform.fuchsia),
       home: const MyHomePage(title: 'Demo page'),
     );
   }
@@ -61,6 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _updateSharedPreferences() async{
+  //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter')?? 0) + 1;
+    print('Pressed $counter times.');
+    await prefs.setInt('counter',counter);
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -76,8 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -102,6 +115,22 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Theme(
+// Unique theme with ThemeData - Overwrite
+              data: ThemeData(
+                cardColor: Colors.deepOrange,
+              ),
+              child: Card(
+                child: Text('Unique ThemeData'),
+              ),
+            ),
+            Theme(
+// copyWith Theme - Inherit (Extended)
+              data: Theme.of(context).copyWith(cardColor: Colors.deepOrange),
+              child: Card(
+                child: Text('copyWith Theme'),
+              ),
+            ),
           ],
         ),
       ),
@@ -111,5 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class Instructions extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text('When using a Stateless widget');
   }
 }
