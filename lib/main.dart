@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
-
+  //this is just a comment
   void _updateSharedPreferences() async{
   //
     SharedPreferences prefs = await SharedPreferences.getInstance();
